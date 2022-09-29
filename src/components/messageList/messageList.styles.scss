@@ -1,0 +1,94 @@
+.message-list {
+    width: 60%;
+    //background: rgb(239, 213, 151);
+    color: rgb(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+
+}
+
+.contact-header {
+    background: rgb(236, 236, 236);
+    border-bottom: 2px solid rgb(255, 255, 255);
+    //border-left: 2px solid rgb(255, 255, 255);
+    display: flex;
+    // flex-direction: row;
+    //justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+}
+
+.contact-user-img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    background-color: red;
+    margin: 1rem;
+}
+
+.contact-user-data {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: flex-start;
+}
+
+.search-btn,
+.more-btn,
+.call-btn {
+    box-sizing: border-box;
+    background: rgb(215, 215, 215);
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.messages {
+    flex-grow: 1;
+    background: rgb(193, 214, 215);
+}
+
+.message-send {
+    height: 5%;
+    background: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: row;
+    border-radius: 30px;
+    padding: 1rem 1.5rem;
+    margin: 1rem;
+    align-items: center;
+
+    input {
+        flex-grow: 1;
+        border: none;
+        margin: 0 1.2rem;
+        outline: none;
+
+        &:active {
+            border: none;
+        }
+    }
+
+    .smile-btn,
+    .send-btn {
+cursor: pointer;
+        img{
+
+            height: 30px;
+            width: 30px;
+        }
+    }
+
+    .send-btn {
+       // background-color: rgb(151, 151, 232);
+        padding: 5px;
+        border-radius: 50%;
+
+        img {
+            fill: white;
+        }
+    }
+}
