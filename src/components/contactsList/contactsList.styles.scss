@@ -1,50 +1,46 @@
-.contact-list{
+.contact-list {
     width: 40%;
-    background: rgb(242, 242, 242);
+    background: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
-    border-right: 2px solid rgb(255, 255, 255);
+    border-right: 2px solid rgb(201, 201, 201);
+    height: 100%;
 }
 
-.user-header{
+.user-header {
     display: flex;
     align-items: center;
-    border-bottom: 2px solid rgb(255, 255, 255);
+    border-bottom: 2px solid rgb(201, 201, 201);
+    background-color: white;
 
-    img{
+    img {
         cursor: pointer;
     }
 }
 
 .search-btn,
-.add-btn,.bell-btn {
+.add-btn,
+.bell-btn {
     box-sizing: border-box;
-    background: rgb(215, 215, 215);
+    background: rgb(241, 241, 241);
     border-radius: 50%;
     height: 40px;
     width: 40px;
     cursor: pointer;
     margin: 1rem;
     padding: 1rem;
+
+    &:hover{
+background: rgb(214, 214, 214);
+    }
 }
 
-.user-name{
+.user-name {
     flex-grow: 1;
     text-align: left;
 }
-.contact{
-    height: 7rem;
-    //margin: 1rem 0;
-    padding: 1rem;
-    background: rgb(242, 242, 242);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-cursor: pointer;
-    &:hover{
-    background: rgb(231, 231, 231);
 
-    }
-}
-.contacts{
-
+.contacts {
+    height: 90%;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
 }

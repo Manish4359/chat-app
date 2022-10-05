@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import './messageList.styles.scss'
 import search from './../../assets/search.svg'
 import threedots from './../../assets/three-dots.svg'
@@ -7,6 +7,28 @@ import smile from './../../assets/smile.svg'
 import send from './../../assets/send.svg'
 
 function MessageList() {
+
+    let [text, setText] = useState("")
+
+
+    useEffect(
+        setText = (value) => {
+            text = value;
+            console.log(text);
+        })
+
+    const sendMessage = (e) => {
+
+        document.querySelector('.input-msg').value=""
+        if (text) {
+            document.querySelector('.messages').insertAdjacentHTML("afterbegin", `<span class="message user-message">${text}</span>`);
+            text=""
+        }
+
+
+    }
+
+
     return (
         <div className="message-list">
             <div className="contact-header">
@@ -28,19 +50,43 @@ function MessageList() {
 
             </div>
             <div className="messages">
-                messages
+                <span className="message user-message">mesNote that the development build is
+                    not optimized.
+                    To create a production build, use npm run build.sages1 </span>
+                <span className="message contact-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages3 </span>
+                <span className="message user-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message user-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message contact-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message user-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message user-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message user-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message contact-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message user-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message contact-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
+                <span className="message contact-message">messNote that the development build is not optimized.
+                    To create a production build, use npm run build.ages2 </span>
             </div>
             <div className="message-send">
                 <div className="smile-btn">
 
-                <img src={smile} alt="smile"/>
+                    <img src={smile} alt="smile" />
                 </div>
-                <input type="text" placeholder="Type your message here..." />
+                <input className="input-msg" type="text" placeholder="Type your message here..." onChange={(e) => setText(e.target.value)} />
                 <div className="send-btn">
-                    <img src={send} alt="send"/>
+                    <img src={send} alt="send" onClick={sendMessage} />
                 </div>
             </div>
         </div>)
 }
 
-export default MessageList; 
+export default MessageList

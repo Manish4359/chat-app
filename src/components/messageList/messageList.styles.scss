@@ -1,15 +1,17 @@
 .message-list {
     width: 60%;
-    //background: rgb(239, 213, 151);
+    background: rgb(193, 214, 215);
+
     color: rgb(0, 0, 0);
     display: flex;
     flex-direction: column;
 
+
 }
 
 .contact-header {
-    background: rgb(236, 236, 236);
-    border-bottom: 2px solid rgb(255, 255, 255);
+    background: rgb(255, 255, 255);
+    border-bottom: 2px solid rgb(201, 201, 201);
     //border-left: 2px solid rgb(255, 255, 255);
     display: flex;
     // flex-direction: row;
@@ -37,18 +39,55 @@
 .more-btn,
 .call-btn {
     box-sizing: border-box;
-    background: rgb(215, 215, 215);
+    background: rgb(241, 241, 241);
     border-radius: 50%;
-    height: 40px;
-    width: 40px;
+    height: 4rem;
+    width: 4rem;
     cursor: pointer;
     margin: 1rem;
     padding: 1rem;
+
+    &:hover {
+        background: rgb(214, 214, 214);
+    }
 }
 
 .messages {
     flex-grow: 1;
-    background: rgb(193, 214, 215);
+    //background: rgb(193, 214, 215);
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+
+
+
+
+
+}
+
+.message {
+    padding: 1rem;
+    margin: 1rem;
+    background: rgb(255, 255, 255);
+    max-width: 60%;
+    width: fit-content;
+    text-align: justify;
+    overflow-wrap: break-word;
+    font-size: 1.4rem;
+}
+
+.contact-message {
+    border-radius: 0 20px 20px;
+    align-self: flex-start;
+
+}
+
+.user-message {
+    border-radius: 20px 0 20px 20px;
+
+    align-self: flex-end;
 }
 
 .message-send {
@@ -66,6 +105,8 @@
         border: none;
         margin: 0 1.2rem;
         outline: none;
+        height: 100%;
+        font-size: 1.4rem;
 
         &:active {
             border: none;
@@ -74,8 +115,9 @@
 
     .smile-btn,
     .send-btn {
-cursor: pointer;
-        img{
+        cursor: pointer;
+
+        img {
 
             height: 30px;
             width: 30px;
@@ -83,7 +125,7 @@ cursor: pointer;
     }
 
     .send-btn {
-       // background-color: rgb(151, 151, 232);
+        // background-color: rgb(151, 151, 232);
         padding: 5px;
         border-radius: 50%;
 

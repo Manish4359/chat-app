@@ -1,11 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
 import ContactsContainer from './components/contactsContainer/contactsContainer.component';
+import SignInAndSignUp from './components/signInAndSignUp/signInAndSignUp.component';
 
 function App() {
+  let user='';
   return (
     <div className="App">
-     <ContactsContainer/>
+     {user?<ContactsContainer />:<SignInAndSignUp />}
     </div>
   );
 }
