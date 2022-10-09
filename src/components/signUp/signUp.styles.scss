@@ -5,7 +5,8 @@ $color-secondary-light:#50F1EA;
 $color-text-light:grey;
 
 .sign-up-container {
-    width: 50%;
+    //width: 50%;
+    height: 100%;
     //padding: 5rem;
     background: rgb(255, 255, 255);
     display: grid;
@@ -17,7 +18,7 @@ $color-text-light:grey;
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    width: 60%;
+    width: 30%;
 
     h2 {
         font-size: 3rem;

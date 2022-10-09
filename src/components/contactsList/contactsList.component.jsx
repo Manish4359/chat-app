@@ -5,8 +5,9 @@ import plus from './../../assets/plus.svg'
 import bell from './../../assets/bell.svg'
 
 import Contact from "../contact/contact.components";
+import { connect } from "react-redux";
 
-function ContactsList() {
+function ContactsList({currentUser}) {
 
     const contacts = [
         {
@@ -53,9 +54,9 @@ function ContactsList() {
         <div className="contact-list">
             <div className="user-header">
 
-                <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="" className="contact-user-img" />
+                <img src={currentUser.photoURL} alt="" className="contact-user-img" />
                 <h3 className="user-name">
-                    Manish Kumar
+                    {currentUser.name}
                 </h3>
                 <img alt="add" src={plus} className="add-btn" />
                 <img alt='notif' src={bell} className="bell-btn" />
@@ -70,13 +71,7 @@ function ContactsList() {
                 <Contact />
                 <Contact />
                 <Contact />
-                <Contact />
-                <Contact />
-                <Contact />
-                <Contact />
-                <Contact />
-                <Contact />
-                <Contact />
+            
 
             </div>
         </div>
@@ -84,4 +79,8 @@ function ContactsList() {
 
 }
 
-export default ContactsList; 
+const mapStateToProps=state=>({
+    currentUser:state.user.currentUser
+})
+
+export default  connect(mapStateToProps)(ContactsList); 

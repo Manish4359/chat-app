@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { setCurrentUser } from './../../redux/user/user.actions'
+import { signinUser } from "../../firebase/firebase";
+import SignUp from "../signUp/signUp.component";
+
 import './signIn.styles.scss'
+function SignIn({ setCurrentUser }) {
 
-function SignIn() {
+    const navigate = useNavigate();
 
-    const [data, setdata] = useState('0')
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
@@ -21,41 +27,24 @@ function SignIn() {
 
     }
 
-    const fetchdata = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
-        await fetch('http://localhost:8080/signin', {
-            method: 'POST',
-            headers:{
-                'Access-Control-Allow-Origin':'http://localhost:8080',
-                'vary':'origin',
-                "content-type":"application/json"
-            },
-            mode:'cors',
-            body: JSON.stringify({email,password})
-            
-        })
-            .then(res => {
-                console.log(res)
-                console.log(email, password)
+        const user = await signinUser({ email, password })
 
-                return res.json()
-            })
-            .then(text => {
-                console.log(text)
-                setdata(text.data)
-            })
-            .catch((err) => console.log(`error occured: ${err}`))
+        if (user) {
+            setCurrentUser(user)
+            navigate('/')
+        }
     }
 
     return (
         <div className="sign-in-container">
             <div className="sign-in">
 
-                <p>server responded with : {data}</p>
                 <h2>Welcome back</h2>
                 <h3>welcome back! please enter your details</h3>
-                <form onSubmit={fetchdata}>
+                <form onSubmit={handleSubmit}>
                     <label htmlFor="signin-email">Email</label><br />
                     <input type="email" id="signin-email" placeholder="Enter your email" name="email" onChange={inputHandler} /><br />
                     <label htmlFor="signin-pass">Password</label><br />
@@ -70,12 +59,19 @@ function SignIn() {
                     <button type="submit">Sign In</button>
                 </form>
                 <button className="sign-in-with-google">SignIn with google</button>
-                <span className="no-account">Don't have an account? Sign Up</span>
+                <span className="no-account">Don't have an account?<Link to='/signup'> Sign Up</Link> </span>
             </div>
         </div>
     )
 }
 
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
+})
+
+const mapDispatchToProps = dispatch => ({
+    setCurrentUser: user => dispatch(setCurrentUser(user))
+})
 
 
-export default SignIn
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn)
