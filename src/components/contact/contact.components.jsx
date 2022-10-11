@@ -4,7 +4,7 @@ import './contact.styles.scss'
 function Contact() {
     return (
         <div className="contact">
-            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="" className="contact-user-img" />
+            <img src="https://xsgames.co/randomusers/avatar.php?g=male" alt="" className="contact-user-img" />
             <div className="contact-det">
                 <div>
                     <h3 className="user-name">

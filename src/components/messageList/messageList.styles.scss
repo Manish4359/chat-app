@@ -1,6 +1,9 @@
+@import './../../variables.scss';
+@import './../../commonStyles.scss';
+
 .message-list {
     width: 60%;
-    background: rgb(193, 214, 215);
+    background: rgb(218, 248, 250);
 
     color: rgb(0, 0, 0);
     display: flex;
@@ -18,6 +21,10 @@
     //justify-content: flex-start;
     align-items: center;
     cursor: pointer;
+
+    img:not(:first-child) {
+        @include btnStyles;
+    }
 }
 
 .contact-user-img {
@@ -38,18 +45,8 @@
 .search-btn,
 .more-btn,
 .call-btn {
-    box-sizing: border-box;
-    background: rgb(241, 241, 241);
-    border-radius: 50%;
-    height: 4rem;
-    width: 4rem;
-    cursor: pointer;
-    margin: 1rem;
-    padding: 1rem;
+   
 
-    &:hover {
-        background: rgb(214, 214, 214);
-    }
 }
 
 .messages {
@@ -95,8 +92,8 @@
     background: rgb(255, 255, 255);
     display: flex;
     flex-direction: row;
-    border-radius: 30px;
-    padding: 1rem 1.5rem;
+    border-radius: 15px;
+    padding: 1rem 0;
     margin: 1rem;
     align-items: center;
 
@@ -115,22 +112,35 @@
 
     .smile-btn,
     .send-btn {
+        margin: 1rem 0;
         cursor: pointer;
+        height: 40px;
+        width: 40px;
+        transition: all 0.3s;
 
         img {
+            height: 50%;
+            padding: 1rem;
 
-            height: 30px;
-            width: 30px;
+
         }
+
     }
 
     .send-btn {
-        // background-color: rgb(151, 151, 232);
+        margin-right: 5px;
+        background-color: $color-secondary-dark;
         padding: 5px;
-        border-radius: 50%;
+        border-radius: 15px;
 
-        img {
-            fill: white;
+        img{
+            padding-right: 0;
+            filter: invert(100);
+
+        }
+
+        &:hover {
+            background-color: $color-secondary-light;
         }
     }
 }

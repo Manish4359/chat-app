@@ -1,3 +1,6 @@
+@import './../../variables.scss';
+@import './../../commonStyles.scss';
+
 .contact-list {
     width: 40%;
     background: rgb(255, 255, 255);
@@ -12,27 +15,15 @@
     border-bottom: 2px solid rgb(201, 201, 201);
     background-color: white;
 
-    img {
-        cursor: pointer;
+    & img:not(:first-child) {
+        @include btnStyles;
+        
     }
 }
 
 .search-btn,
 .add-btn,
-.bell-btn {
-    box-sizing: border-box;
-    background: rgb(241, 241, 241);
-    border-radius: 50%;
-    height: 40px;
-    width: 40px;
-    cursor: pointer;
-    margin: 1rem;
-    padding: 1rem;
-
-    &:hover{
-background: rgb(214, 214, 214);
-    }
-}
+.bell-btn {}
 
 .user-name {
     flex-grow: 1;
@@ -43,4 +34,40 @@ background: rgb(214, 214, 214);
     height: 90%;
     overflow-y: scroll;
     scroll-behavior: smooth;
+}
+
+
+.user-setting-menu {
+
+    position: relative;
+    
+
+    .menu-btn{
+
+        img {
+            @include btnStyles;
+        }
+    }
+
+    .menu {
+        width: max-content;
+        position: absolute;
+        color: white;
+        background: $color-primary-dark;
+        list-style-type: none;
+        left: -120px;
+        top: 50px;
+        margin: 1rem;
+
+        li {
+            padding: 2rem;
+            cursor: pointer;
+            text-transform: capitalize;
+
+            &:hover {
+                background: $color-primary-light;
+            }
+        }
+
+    }
 }

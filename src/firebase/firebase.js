@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider,signInWithPopup } from 'firebase/auth'
 
 const firebaseConfig = {
     apiKey: "AIzaSyBtd2FISa19lYXLikuxn8rI1sAv83R77zs",
@@ -15,9 +15,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const auth = getAuth()
+
+const provider = new GoogleAuthProvider();
+
 export const signupUser = async ({ name, email, password, photoURL }) => {
-
-
 
     const user = await createUserWithEmailAndPassword(auth, email, password)
         .then(userCredentials =>
@@ -56,8 +57,32 @@ export const signinUser = async ({ email, password }) => {
     return {
         id: user.uid,
         name: user.displayName,
+        email: user.email,
         photoURL: user.photoURL,
-        email: user.email
     }
 }
 
+export const signInWithGoogle = async () => {
+
+    const user=await signInWithPopup(auth, provider)
+        .then((result) => result.user)
+        .catch((error) => {
+           console.log(error)
+        });
+
+        if (!user) return
+        
+        return {
+            id: user.uid,
+            name: user.displayName,
+            email: user.email,
+            photoURL: user?.photoURL,
+        }
+}
+
+export const signOutUser = () => {
+
+    if (auth.currentUser) {
+        auth.signOut();
+    }
+}

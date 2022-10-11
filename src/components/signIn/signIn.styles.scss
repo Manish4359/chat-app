@@ -1,9 +1,5 @@
-$color-primary-dark:#01a59d;
-$color-primary-light:#00D1A0;
-$color-secondary-dark:#0294d3;
-$color-secondary-light:#50F1EA;
-
-$color-text-light:grey;
+@import './../../variables.scss';
+@import './../../commonStyles.scss';
 
 .sign-in-container {
     width: 100%;
@@ -35,43 +31,32 @@ $color-text-light:grey;
 
     form {
 
+        .sign-in-error-text {
+            @include errorTextStyle;
+        }
+
         label {
             font-weight: 400;
         }
 
         &>input {
-            width: 100%;
-            margin: 1rem 0 1.5rem 0;
-            padding: 1.2rem;
-            box-sizing: border-box;
-            border-radius: 5px;
-            border: 1px solid rgb(203, 203, 203);
-            font-size: 1.4rem;
-            color: $color-text-light;
+            @include formInputStyle;
 
-            &:focus {
-                outline: none;
-            }
         }
 
         button {
-            background: $color-primary-light;
-            color: white;
-            margin: 2rem 0;
-            padding: 1.5rem 2.5rem;
-            border: none;
-            border-radius: 5px;
-            width: 100%;
-            font-size: 1.6rem;
-            font-weight: 600;
-            // box-shadow: 2px 2px 2px rgb(231, 231, 231);
-            transition: all 0.3s;
-            cursor: pointer;
+            @include formSubmitBtnStyle;
 
-            &:hover {
-                box-shadow: 5px 5px 2px rgb(231, 231, 231);
-                transform: translate(-5px, -5px);
+            div {
+                display: flex;
+                position: relative;
+                align-items: center;
             }
+
+            span {
+                width: 100%;
+            }
+
         }
 
         .signin-opt {
@@ -92,9 +77,27 @@ $color-text-light:grey;
 
             .forgot-pass {
                 color: $color-primary-dark;
+                font-weight: 600;
+                cursor: pointer;
             }
         }
 
+
+    }
+
+    .sign-in-with-google {
+        @include formSubmitBtnStyle;
+
+        background: white;
+        color: black;
+        border: 1px solid rgb(203, 203, 203);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img{
+            padding-right: 1rem;
+        }
 
     }
 

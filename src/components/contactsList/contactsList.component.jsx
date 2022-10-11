@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import './contactsList.styles.scss'
 import search from './../../assets/search.svg'
 import plus from './../../assets/plus.svg'
-import bell from './../../assets/bell.svg'
+import threedots from './../../assets/three-dots.svg'
+
 
 import Contact from "../contact/contact.components";
 import { connect } from "react-redux";
+import { setCurrentUser } from "../../redux/user/user.actions";
+import { signOutUser } from "../../firebase/firebase";
 
-function ContactsList({currentUser}) {
+function ContactsList({ currentUser, setCurrentUser }) {
 
     const contacts = [
         {
@@ -34,7 +37,7 @@ function ContactsList({currentUser}) {
                     }
                 ]
             }
-            
+
         },
         {
             3: {
@@ -47,9 +50,25 @@ function ContactsList({currentUser}) {
                     }
                 ]
             }
-            
+
         }
     ]
+
+    const [showUserMenu, toggleUserMenu] = useState(false)
+
+    const handleLogout = (e) => {
+        e.stopPropagation()
+        signOutUser()
+        setCurrentUser(null)
+
+
+    }
+    const handleToogleUserMenu = (e) => {
+
+        e.stopPropagation()
+        toggleUserMenu(!showUserMenu)
+    }
+
     return (
         <div className="contact-list">
             <div className="user-header">
@@ -59,10 +78,19 @@ function ContactsList({currentUser}) {
                     {currentUser.name}
                 </h3>
                 <img alt="add" src={plus} className="add-btn" />
-                <img alt='notif' src={bell} className="bell-btn" />
                 <img alt="search" src={search} className="search-btn" />
+                <div className="user-setting-menu" >
+                    <div className="menu-btn" onClick={handleToogleUserMenu}>
+                        <img alt='more' src={threedots} className="more-btn user-setting" />
+                    </div>
+                    {showUserMenu ? (<ul className="menu">
+                        <li>starred messages</li>
+                        <li >settings</li>
+                        <li onClick={handleLogout}>logout</li>
+                    </ul>) : <></>}
+                </div>
             </div>
-            <div className="contacts">
+            <div className="contacts" >
 
                 <Contact />
                 <Contact />
@@ -71,7 +99,7 @@ function ContactsList({currentUser}) {
                 <Contact />
                 <Contact />
                 <Contact />
-            
+
 
             </div>
         </div>
@@ -79,8 +107,12 @@ function ContactsList({currentUser}) {
 
 }
 
-const mapStateToProps=state=>({
-    currentUser:state.user.currentUser
+const mapStateToProps = state => ({
+    currentUser: state.user.currentUser
 })
 
-export default  connect(mapStateToProps)(ContactsList); 
+const mapDispatchToProps = dispatch => ({
+    setCurrentUser: () => dispatch(setCurrentUser(null))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactsList); 

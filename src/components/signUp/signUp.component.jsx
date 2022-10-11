@@ -1,9 +1,12 @@
-import React, { useState, useLayoutEffect } from "react";
+import React, { useState } from "react";
 import { signupUser } from "../../firebase/firebase";
 import { connect } from "react-redux";
 import { setCurrentUser } from './../../redux/user/user.actions'
 import { useNavigate } from 'react-router-dom'
+import { Link } from "react-router-dom";
 import './signUp.styles.scss'
+import LoadingIndicator from "../loadingIndicator/loadingIndicator";
+
 function SignUp({ currentUser, setCurrentUser }) {
 
     const navigate = useNavigate();
@@ -15,6 +18,9 @@ function SignUp({ currentUser, setCurrentUser }) {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
+
+    const [showLoader, setShowLoader] = useState(false)
+
 
     const inputHandler = (e) => {
 
@@ -43,8 +49,12 @@ function SignUp({ currentUser, setCurrentUser }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        setShowLoader(true)
+
         if (firstName === "" || lastName === "" || password !== confirmPassword) {
-            console.error('invalid credentials!!!')
+            alert('invalid credentials!!!')
+            
+            setShowLoader(false)
             return
         }
 
@@ -57,7 +67,11 @@ function SignUp({ currentUser, setCurrentUser }) {
         console.log(user)
         if (user) {
             setCurrentUser(user);
+            setShowLoader(false)
             navigate('/')
+        }
+        else {
+            setShowLoader(false)
         }
     }
 
@@ -91,9 +105,19 @@ function SignUp({ currentUser, setCurrentUser }) {
                         </div>
                         <span className="forgot-pass">Forgot password</span>
                     </div>
-                    <button type="submit">Sign Up</button>
+                    <button type="submit">
+                        <div>
+                            <span>
+                                Sign Up
+                            </span>
+
+                            <LoadingIndicator showLoader={showLoader} />
+                        </div>
+                    </button>
                 </form>
-                <button className="sign-up-with-google">Signup with google</button>
+
+                <span className="no-account">Already have an account?<Link to='/signin'> Sign In</Link> </span>
+
             </div>
         </div>
     )

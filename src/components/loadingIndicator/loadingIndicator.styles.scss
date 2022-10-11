@@ -1,0 +1,30 @@
+@import './../../variables.scss';
+$width:calc(100% + 8px);
+
+#loading {
+    position: absolute;
+   // float: right;
+   right: 0;
+    height: 2rem;
+    width: 2rem;
+    border: 3px solid $color-primary-light;
+    border-top: 3px solid white ;
+    border-bottom: 3px solid white ;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+
+    animation: anim 1.5s infinite  ease-in-out;
+transition: all 0.5s;
+}
+
+@keyframes anim {
+
+    0% {
+        transform: rotateZ(0);
+    }
+
+    100% {
+        transform: rotateZ(720deg);
+    }
+}

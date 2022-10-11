@@ -10,18 +10,24 @@ function MessageList() {
 
     let [text, setText] = useState("")
 
+    const handleInputText=(e)=>{
+        setText(e.target.value)
+        console.log(e)
 
-    useEffect(
-        setText = (value) => {
-            text = value;
-            console.log(text);
-        })
+        
+        if(e.key==='Enter'){
+            sendMessage()
+        }
+    }
 
     const sendMessage = (e) => {
 
         document.querySelector('.input-msg').value=""
         if (text) {
-            document.querySelector('.messages').insertAdjacentHTML("afterbegin", `<span class="message user-message">${text}</span>`);
+            const container=document.querySelector('.messages')
+            console.log(container.scrollHeight)
+            container.insertAdjacentHTML("afterbegin", `<span class="message user-message">${text}</span>`);
+            container.scrollTop=container.scrollHeight
             text=""
         }
 
@@ -49,7 +55,7 @@ function MessageList() {
                 <img alt="more" src={threedots} className="call-btn " />
 
             </div>
-            <div className="messages">
+            <div className="messages " >
                 <span className="message user-message">mesNote that the development build is
                     not optimized.
                     To create a production build, use npm run build.sages1 </span>
@@ -81,7 +87,7 @@ function MessageList() {
 
                     <img src={smile} alt="smile" />
                 </div>
-                <input className="input-msg" type="text" placeholder="Type your message here..." onChange={(e) => setText(e.target.value)} />
+                <input className="input-msg" type="text" placeholder="Type your message here..." onKeyUp={handleInputText} />
                 <div className="send-btn">
                     <img src={send} alt="send" onClick={sendMessage} />
                 </div>

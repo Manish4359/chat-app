@@ -5,7 +5,7 @@ import { Navigate, Route, BrowserRouter as Router,Routes } from 'react-router-do
 import ContactsContainer from './components/contactsContainer/contactsContainer.component';
 import SignIn from './components/signIn/signIn.component';
 import SignUp from './components/signUp/signUp.component'
-
+import LoadingIndicator from './components/loadingIndicator/loadingIndicator';
 function App({ currentUser }) {
 
   console.log(currentUser)
@@ -18,6 +18,7 @@ function App({ currentUser }) {
        <Route exact path='/' element={currentUser?<ContactsContainer/>:<Navigate to='/signin'/>}/>
        <Route exact path='/signin' element={!currentUser?<SignIn/>:<Navigate to='/'/>}/>
        <Route exact path='/signup' element={!currentUser?<SignUp/>:<Navigate to='/'/>}/>
+       <Route exact path='/li' element={<LoadingIndicator/>} />
         </Routes> 
       </div>
     </Router>

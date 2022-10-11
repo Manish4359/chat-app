@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setCurrentUser } from './../../redux/user/user.actions'
-import { signinUser } from "../../firebase/firebase";
-import SignUp from "../signUp/signUp.component";
+import { signinUser, signInWithGoogle } from "../../firebase/firebase";
+import LoadingIndicator from "../loadingIndicator/loadingIndicator";
+import googleLogo from './../../assets/google-logo.svg'
 
 import './signIn.styles.scss'
 function SignIn({ setCurrentUser }) {
@@ -12,8 +13,8 @@ function SignIn({ setCurrentUser }) {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-
-
+    const [showLoader, setShowLoader] = useState(false)
+    const [showErrorText, setErrorText] = useState(false)
     const inputHandler = (e) => {
 
         if (e.target.name === 'email') {
@@ -30,12 +31,31 @@ function SignIn({ setCurrentUser }) {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        setShowLoader(true)
         const user = await signinUser({ email, password })
 
         if (user) {
             setCurrentUser(user)
+            setShowLoader(false)
             navigate('/')
         }
+        else {
+
+            setErrorText(true)
+        }
+        setShowLoader(false)
+    }
+    const handleSignInWithGoogle =async (e) => {
+        e.preventDefault()
+
+        const user=await signInWithGoogle();
+
+        if(user){
+            setCurrentUser(user)
+            navigate('/')
+
+        }
+
     }
 
     return (
@@ -56,9 +76,15 @@ function SignIn({ setCurrentUser }) {
                         </div>
                         <span className="forgot-pass">Forgot password</span>
                     </div>
-                    <button type="submit">Sign In</button>
+                    <p className="sign-in-error-text" style={{ display: showErrorText ? 'block' : 'none' }}>wrong email or password</p>
+                    <button type="submit">
+                        <div>
+                            <span>Sign In</span>
+                            <LoadingIndicator showLoader={showLoader} />
+                        </div>
+                    </button>
                 </form>
-                <button className="sign-in-with-google">SignIn with google</button>
+                <button className="sign-in-with-google" onClick={handleSignInWithGoogle}><img src={googleLogo}/> Sign in with google</button>
                 <span className="no-account">Don't have an account?<Link to='/signup'> Sign Up</Link> </span>
             </div>
         </div>
