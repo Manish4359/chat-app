@@ -1,14 +1,15 @@
 import React from "react";
-import './contact.styles.scss'
+import './chatCard.styles.scss'
 
-function Contact() {
+function ChatCard({contact,fun}) {
+
+   // console.log(name,email)
     return (
-        <div className="contact">
-            <img src="https://xsgames.co/randomusers/avatar.php?g=male" alt="" className="contact-user-img" />
-            <div className="contact-det">
+        <div className="chatCard" onClick={()=>fun(contact)}>
+            <img src="https://xsgames.co/randomusers/avatar.php?g=male" alt="" className="chatCard-user-img" />
+            <div className="chatCard-det">
                 <div>
                     <h3 className="user-name">
-                        Saurav
                     </h3>
                     <span>12:45</span>
                 </div>
@@ -23,4 +24,4 @@ function Contact() {
     )
 }
 
-export default Contact
+export default ChatCard

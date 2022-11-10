@@ -1,7 +1,7 @@
 @import './../../variables.scss';
 @import './../../commonStyles.scss';
 
-.contact-list {
+.chat-list {
     width: 40%;
     background: rgb(255, 255, 255);
     color: rgb(0, 0, 0);
@@ -30,10 +30,11 @@
     text-align: left;
 }
 
-.contacts {
+.chats {
     height: 90%;
     overflow-y: scroll;
     scroll-behavior: smooth;
+    scrollbar-gutter: stable;
 }
 
 

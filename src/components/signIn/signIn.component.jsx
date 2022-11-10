@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setCurrentUser } from './../../redux/user/user.actions'
@@ -11,28 +11,17 @@ function SignIn({ setCurrentUser }) {
 
     const navigate = useNavigate();
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const emailRef = useRef("")
+    const passwordRef = useRef("")
     const [showLoader, setShowLoader] = useState(false)
     const [showErrorText, setErrorText] = useState(false)
-    const inputHandler = (e) => {
-
-        if (e.target.name === 'email') {
-            setEmail(e.target.value)
-        }
-        if (e.target.name === "password") {
-            setPassword(e.target.value);
-        }
-
-        console.log(email, password)
-
-    }
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         setShowLoader(true)
-        const user = await signinUser({ email, password })
+        
+        const user = await signinUser({ email:emailRef.current.value, password:passwordRef.current.value })
 
         if (user) {
             setCurrentUser(user)
@@ -66,9 +55,9 @@ function SignIn({ setCurrentUser }) {
                 <h3>welcome back! please enter your details</h3>
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="signin-email">Email</label><br />
-                    <input type="email" id="signin-email" placeholder="Enter your email" name="email" onChange={inputHandler} /><br />
+                    <input type="email" id="signin-email" placeholder="Enter your email" name="email" ref={emailRef} /><br />
                     <label htmlFor="signin-pass">Password</label><br />
-                    <input type="password" id="signin-pass" placeholder="Enter your password" name="password" onChange={inputHandler} />
+                    <input type="password" id="signin-pass" placeholder="Enter your password" name="password" ref={passwordRef} />
                     <div className="signin-opt">
                         <div className="remember">
                             <input type="checkbox" id="remember-me" />
