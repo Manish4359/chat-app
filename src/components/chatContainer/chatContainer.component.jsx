@@ -7,24 +7,29 @@ import { connect } from "react-redux";
 import './chatContainer.styles.scss'
 import ChatList from "../chatList/chatList.component";
 import MessageList from "../messageList/messageList.component";
+import { useState } from "react";
 
 function ChatContainer({ currentUser }) {
-/*
+
+
+
+    let [socket,setSock]=useState(null);
+
+    const setSocketRef= async ()=>{
     
-    useEffect(
-        () => {
-            const socket = io("ws://localhost:8888/")
-            socket.on('connect', () => {
-                console.log('connected');
-            })
-        }, [])
-        
-*/
-    return (
-        <div className="chat-container">
-            <ChatList />
-            <MessageList currentUser={currentUser} />
-        </div>)
+        const s =await io("ws://localhost:8888/")
+
+        setSock(s)
+    }
+    useEffect(() => {
+        setSocketRef()
+    }, [])
+
+    return (socket ? <div className="chat-container">
+        <ChatList />
+        <MessageList socket={socket}/>
+    </div> : <span>connecting to server</span>)
+
 }
 
 const mapStateToProps = state => ({

@@ -1,34 +1,38 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
+
 import './messageList.styles.scss'
 import search from './../../assets/search.svg'
 import threedots from './../../assets/three-dots.svg'
 import call from './../../assets/call-add.svg'
 import smile from './../../assets/smile.svg'
 import send from './../../assets/send.svg'
-import { io } from "socket.io-client";
 
 import { connect } from "react-redux";
 
-function MessageList({chatRoom}) {
+function MessageList({ chatRoom, currentUser, socket }) {
 
-    let [text, setText] = useState("")
+
+    let textRef = useRef("")
 
     const handleInputText = (e) => {
-        setText(e.target.value)
-        console.log(e)
-
-
+        // console.log(e)
         if (e.key === 'Enter') {
-           // sendMessage()
+            sendMessage()
         }
     }
- const {isRoomCreated}=chatRoom
-    console.log(isRoomCreated)
+    const { isRoomCreated } = chatRoom
+    const { room } = chatRoom
 
+    // console.log(isRoomCreated,room)
 
-    /*
+    socket.on('connect', () => {
+        console.log('connected', socket.id)
+    })
+
     const sendMessage = (e) => {
+
         const container = document.querySelector('.messages')
+        const text = textRef.current.value;
 
         document.querySelector('.input-msg').value = ""
         if (text) {
@@ -36,23 +40,52 @@ function MessageList({chatRoom}) {
             //   container.insertAdjacentHTML("beforeend", `<span class="message user-message">${text}</span>`);
 
             const msgData = {
-                senderId: "8P4QEVjea5OdMz0xt6hfgsfb65A3",
-                receiverId: "LgU0D80td0gn6bvzRPIlZZEGkYg2",
-                msg: text
+                id: Date.now(),
+                senderId: room.senderId,
+                receiverId: room.receiverId,
+                message: text
             }
+            container.insertAdjacentHTML("beforeend", `<span class="message user-message">${msgData.message}</span>`);
 
-            io().emit('message', msgData)
-            io().on('message', ({ senderId, msg }) => {
+            console.log(msgData);
 
-                container.insertAdjacentHTML("beforeend", `<span class="message ${senderId === currentUser.id ? 'user-message' : 'contact-message'}">${msg}</span>`);
+            socket.emit('send-mess', msgData)
+
+            socket.onAny((event, ...args) => {
+                console.log(event, args);
+            });
+
+            socket.off('receive-mess').on(`receive-mess`, ({id, senderId, receiverId, message }) => {
+
+
+                console.log(msgData)
+                if (receiverId !== currentUser.id || senderId !== room.receiverId) return
+
+                container.insertAdjacentHTML("beforeend", `<span class="message ${senderId === currentUser.id ? 'user-message' : 'contact-message'}">${message}</span>`);
                 container.scrollTop = container.scrollHeight
+
             })
 
-            setText("")
+            /*
+            const socket = io("ws://localhost:8888/")
+            socket.on('connect', () => {
+                console.log('connected');
+
+
+                io().emit('send-mess', msgData)
+                io().on(`rec-mess-${msgData.receiverId}`, ({ senderId, receiverId, message }) => {
+
+                    container.insertAdjacentHTML("beforeend", `<span class="message ${receiverId === currentUser.id ? 'user-message' : 'contact-message'}">${message}</span>`);
+                    container.scrollTop = container.scrollHeight
+                })
+
+            })
+            */
         }
-        
+        textRef.current.value = ""
+
     }
-    */
+
 
 
     return (
@@ -77,6 +110,7 @@ function MessageList({chatRoom}) {
                 </div>
                     <div className="messages " >
 
+                        {/*
                         <span className="chat-day">Yesterday</span>
                         <span className="message user-message">mesNote that the development build is
                             not optimized.
@@ -91,24 +125,25 @@ function MessageList({chatRoom}) {
                             To create a production build, use npm run build.ages2 </span>
                         <span className="message contact-message">messNote that the development build is not optimized.
                             To create a production build, use npm run build.ages2 </span>
-
+*/}
                     </div>
                     <div className="message-send">
                         <div className="smile-btn">
 
                             <img src={smile} alt="smile" />
                         </div>
-                        <input className="input-msg" type="text" placeholder="Type your message here..." onKeyUp={handleInputText} />
+                        <input className="input-msg" type="text" placeholder="Type your message here..." ref={textRef} onKeyUp={handleInputText} />
                         <div className="send-btn">
-                            <img src={send} alt="send"  />
+                            <img src={send} alt="send" onClick={sendMessage} />
                         </div>
-                    </div></> : <div>not room created</div>}
+                    </div></> : <div>no room created</div>}
         </div>)
 }
 
 const mapStateToProps = state => {
     return {
-        chatRoom: state.chatRoom
+        chatRoom: state.chatRoom,
+        currentUser: state.user.currentUser
     }
 }
 
