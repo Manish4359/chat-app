@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { signOutUser, addData } from "../../firebase/firebase";
 import './chatList.styles.scss'
-import search from './../../assets/search.svg'
-import plus from './../../assets/plus.svg'
-import threedots from './../../assets/three-dots.svg'
+
+import { AiOutlineUserAdd } from 'react-icons/ai'
+import { MdMoreVert } from 'react-icons/md'
+import { BsSearch } from 'react-icons/bs'
 import ChatCard from "../chatCard/chatCard.components";
 import { connect } from "react-redux";
 import { setCurrentUser } from "../../redux/user/user.actions";
 import { createRoom, roomCreated } from './../../redux/chatRoom/chatRoom.actions'
 
 
-function ChatList({ currentUser, setCurrentUser, createRoom,roomCreated }) {
+function ChatList({ currentUser, setCurrentUser, createRoom, roomCreated }) {
 
 
 
@@ -38,12 +39,12 @@ function ChatList({ currentUser, setCurrentUser, createRoom,roomCreated }) {
     console.log(contacts)
 
 
-    const fun = contact => {
-       // console.log(contact)
-        const roomData={
-            roomId:Date.now(),
-            senderId:currentUser.id,
-            receiverId:contact
+    const selectContact = contact => {
+        // console.log(contact)
+        const roomData = {
+            roomId: Date.now(),
+            senderId: currentUser.id,
+            receiverId: contact
         }
         roomCreated(true)
         createRoom(roomData)
@@ -57,11 +58,18 @@ function ChatList({ currentUser, setCurrentUser, createRoom,roomCreated }) {
                 <h3 className="user-name">
                     {currentUser.name}
                 </h3>
-                <img alt="add" src={plus} className="add-btn" onClick={fn} />
-                <img alt="search" src={search} className="search-btn" />
+                <div className="add-btn">
+                    <AiOutlineUserAdd />
+                </div>
+                <div className="search-btn">
+                    <BsSearch />
+                </div>
+    
                 <div className="user-setting-menu" >
                     <div className="menu-btn" onClick={handleToogleUserMenu}>
-                        <img alt='more' src={threedots} className="more-btn user-setting" />
+                        <div className="more-btn user-setting">
+                            <MdMoreVert />
+                        </div>
                     </div>
                     {showUserMenu ? (<ul className="menu">
                         <li>starred messages</li>
@@ -71,7 +79,7 @@ function ChatList({ currentUser, setCurrentUser, createRoom,roomCreated }) {
                 </div>
             </div>
             <div className="chats" >
-                {contacts ? contacts.map((contact, id) => <ChatCard key={id} contact={contact} fun={fun} />) : <></>}
+                {contacts ? contacts.map((contact, id) => <ChatCard key={id} contactId={contact} selectContact={selectContact} />) : <></>}
             </div>
         </div>
 

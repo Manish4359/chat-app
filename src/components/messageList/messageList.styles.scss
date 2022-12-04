@@ -20,7 +20,7 @@
     align-items: center;
     cursor: pointer;
 
-    img:not(:first-child) {
+    div~:not(:first-child) {
         @include btnStyles;
     }
 }
@@ -42,10 +42,7 @@
 
 .search-btn,
 .more-btn,
-.call-btn {
-   
-
-}
+.call-btn {}
 
 .messages {
     flex-grow: 1;
@@ -60,13 +57,13 @@
     padding: 1rem 0;
 
 
-.chat-day{
-    padding:0.7rem 1rem;
-    background: $color-primary-dark;
-    color: white;
-    align-self: center;
-    border-radius: 20px;
-}
+    .chat-day {
+        padding: 0.7rem 1rem;
+        background: $color-primary-dark;
+        color: white;
+        align-self: center;
+        border-radius: 20px;
+    }
 
 
 }
@@ -90,61 +87,71 @@
 
 .user-message {
     border-radius: 20px 0 20px 20px;
-
     align-self: flex-end;
 }
 
 .message-send {
-    height: 5%;
+    height: 5rem;
     background: rgb(255, 255, 255);
     display: flex;
     flex-direction: row;
-    border-radius: 15px;
-    padding: 1rem 0;
-    margin: 1rem;
+    // border-radius: 15px;
+    // padding: 1rem 0;
+    // margin: 1rem;
     align-items: center;
+    position: relative;
 
-    input {
+    .input-msg {
+        box-sizing: border-box;
         flex-grow: 1;
         border: none;
-        margin: 0 1.2rem;
+        // margin: 0 1.2rem;
+        padding: 1rem;
+       // border-radius: 2rem;
         outline: none;
         height: 100%;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
+        background-color: rgb(245, 245, 245);
 
         &:active {
             border: none;
         }
     }
 
-    .smile-btn,
-    .send-btn {
-        margin: 1rem 0;
+
+    .emoji-btn {
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 5rem;
         cursor: pointer;
-        height: 40px;
-        width: 40px;
-        transition: all 0.3s;
 
-        img {
-            height: 50%;
-            padding: 1rem;
-
-
+        &:hover {
+            background-color: rgb(197, 197, 197);
         }
+
 
     }
 
+    .emoji-picker {
+        position: absolute;
+        bottom: 110%;
+        left: 1%;
+    }
+
     .send-btn {
-        margin-right: 5px;
+        box-sizing: border-box;
+        height: 100%;
+       // margin: 1rem 5px 1rem;
         background-color: $color-secondary-dark;
         padding: 5px;
-        border-radius: 15px;
-
-        img{
-            padding-right: 0;
-            filter: invert(100);
-
-        }
+       // border-radius: 15px;
+        width: 6rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         &:hover {
             background-color: $color-secondary-light;

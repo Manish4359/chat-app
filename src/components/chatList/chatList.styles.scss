@@ -15,9 +15,9 @@
     border-bottom: 2px solid rgb(201, 201, 201);
     background-color: white;
 
-    & img:not(:first-child) {
+    &>div:not(:last-child) {
         @include btnStyles;
-        
+
     }
 }
 
@@ -41,11 +41,11 @@
 .user-setting-menu {
 
     position: relative;
-    
 
-    .menu-btn{
 
-        img {
+    .menu-btn {
+
+        div {
             @include btnStyles;
         }
     }

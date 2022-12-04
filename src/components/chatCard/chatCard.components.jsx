@@ -1,11 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
 import './chatCard.styles.scss'
 
-function ChatCard({contact,fun}) {
+function ChatCard({ room, contactId, selectContact }) {
 
-   // console.log(name,email)
+
+
+    const handleHover=(e,color)=>{
+        if (room.receiverId === contactId) return
+        e.currentTarget.style.backgroundColor = color
+    }
     return (
-        <div className="chatCard" onClick={()=>fun(contact)}>
+        <div className="chatCard" onMouseEnter={(e) => handleHover(e,'#dedede')} onMouseLeave={(e)=>handleHover(e,'white')} style={{ backgroundColor: room?.receiverId === contactId ? '#00D1A0' : 'white' }} onClick={() => selectContact(contactId)}>
             <img src="https://xsgames.co/randomusers/avatar.php?g=male" alt="" className="chatCard-user-img" />
             <div className="chatCard-det">
                 <div>
@@ -24,4 +30,8 @@ function ChatCard({contact,fun}) {
     )
 }
 
-export default ChatCard
+const mapStateToProps = (state) => ({
+    room: state.chatRoom.room
+})
+
+export default connect(mapStateToProps)(ChatCard)

@@ -6,19 +6,27 @@ import threedots from './../../assets/three-dots.svg'
 import call from './../../assets/call-add.svg'
 import smile from './../../assets/smile.svg'
 import send from './../../assets/send.svg'
-
+import { MdMoreVert } from 'react-icons/md'
+import { BsSearch, BsEmojiLaughing } from 'react-icons/bs'
+import { BiPhoneCall } from 'react-icons/bi'
+import { IoMdSend } from 'react-icons/io'
 import { connect } from "react-redux";
+import EmojiPicker from "emoji-picker-react";
 
 function MessageList({ chatRoom, currentUser, socket }) {
 
 
     let textRef = useRef("")
+    let [showEmoji, setShowEmoji] = useState(false)
 
     const handleInputText = (e) => {
         // console.log(e)
         if (e.key === 'Enter') {
             sendMessage()
         }
+    }
+    const addEmoji = (e) => {
+        textRef.current.value += e.emoji;
     }
     const { isRoomCreated } = chatRoom
     const { room } = chatRoom
@@ -55,7 +63,7 @@ function MessageList({ chatRoom, currentUser, socket }) {
                 console.log(event, args);
             });
 
-            socket.off('receive-mess').on(`receive-mess`, ({id, senderId, receiverId, message }) => {
+            socket.off('receive-mess').on(`receive-mess`, ({ id, senderId, receiverId, message }) => {
 
 
                 console.log(msgData)
@@ -91,23 +99,28 @@ function MessageList({ chatRoom, currentUser, socket }) {
     return (
         <div className="message-list">
             {
-                isRoomCreated ? <><div className="contact-header">
+                isRoomCreated ? <>
+                    <div className="contact-header">
 
-                    <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="" className="contact-user-img" />
-                    <div className="contact-user-data">
-                        <h3 className="contact-name">
-                            Tej punj
-                        </h3>
-                        <span className="contact-last-seen">
-                            29 feb ,2020
-                        </span>
+                        <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="" className="contact-user-img" />
+                        <div className="contact-user-data">
+                            <h3 className="contact-name">
+                                Tej punj
+                            </h3>
+                            <span className="contact-last-seen">
+                                29 feb ,2020
+                            </span>
+
+                        </div>
+                        <div className="search-btn"><BsSearch /></div>
+                        <div className="call-btn"> <BiPhoneCall /></div>
+                        <div className="more-btn"> <MdMoreVert /></div>
+                        {/* <img alt="search" src={search} className="search-btn" />
+                <img alt='call' src={call} className="more-btn" />
+                    <img alt="more" src={threedots} className="call-btn " />
+                */}
 
                     </div>
-                    <img alt="search" src={search} className="search-btn" />
-                    <img alt='call' src={call} className="more-btn" />
-                    <img alt="more" src={threedots} className="call-btn " />
-
-                </div>
                     <div className="messages " >
 
                         {/*
@@ -128,13 +141,24 @@ function MessageList({ chatRoom, currentUser, socket }) {
 */}
                     </div>
                     <div className="message-send">
-                        <div className="smile-btn">
+                        <div className="emoji-btn"
+                            onClick={(e) => {
+                                setShowEmoji(!showEmoji);
+                                e.stopPropagation()
+                            }}>
 
-                            <img src={smile} alt="smile" />
+                            <div>
+                                <BsEmojiLaughing />
+                            </div>
+
                         </div>
+                        {showEmoji ?
+                            <div className="emoji-picker">
+                                <EmojiPicker autoFocusSearch={false} lazyLoadEmojis={true} previewConfig={{ showPreview: false }} onEmojiClick={addEmoji} />
+                            </div> : <></>}
                         <input className="input-msg" type="text" placeholder="Type your message here..." ref={textRef} onKeyUp={handleInputText} />
-                        <div className="send-btn">
-                            <img src={send} alt="send" onClick={sendMessage} />
+                        <div className="send-btn" onClick={sendMessage}>
+                            <IoMdSend style={{color:'white',width:'3.5rem',height:'3.5rem'}}/>
                         </div>
                     </div></> : <div>no room created</div>}
         </div>)
