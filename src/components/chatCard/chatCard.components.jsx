@@ -7,7 +7,7 @@ function ChatCard({ room, contactId, selectContact }) {
 
 
     const handleHover=(e,color)=>{
-        if (room.receiverId === contactId) return
+        if (room?.receiverId === contactId) return
         e.currentTarget.style.backgroundColor = color
     }
     return (

@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setCurrentUser } from './../../redux/user/user.actions'
 import { signinUser, signInWithGoogle } from "../../firebase/firebase";
 import LoadingIndicator from "../loadingIndicator/loadingIndicator";
-import googleLogo from './../../assets/google-logo.svg'
+import { FcGoogle } from 'react-icons/fc'
 
 import './signIn.styles.scss'
 function SignIn({ setCurrentUser }) {
@@ -15,13 +15,13 @@ function SignIn({ setCurrentUser }) {
     const passwordRef = useRef("")
     const [showLoader, setShowLoader] = useState(false)
     const [showErrorText, setErrorText] = useState(false)
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         setShowLoader(true)
-        
-        const user = await signinUser({ email:emailRef.current.value, password:passwordRef.current.value })
+
+        const user = await signinUser({ email: emailRef.current.value, password: passwordRef.current.value })
 
         if (user) {
             setCurrentUser(user)
@@ -34,12 +34,12 @@ function SignIn({ setCurrentUser }) {
         }
         setShowLoader(false)
     }
-    const handleSignInWithGoogle =async (e) => {
+    const handleSignInWithGoogle = async (e) => {
         e.preventDefault()
 
-        const user=await signInWithGoogle();
+        const user = await signInWithGoogle();
 
-        if(user){
+        if (user) {
             setCurrentUser(user)
             navigate('/')
 
@@ -73,7 +73,12 @@ function SignIn({ setCurrentUser }) {
                         </div>
                     </button>
                 </form>
-                <button className="sign-in-with-google" onClick={handleSignInWithGoogle}><img src={googleLogo}/> Sign in with google</button>
+                <button className="sign-in-with-google" onClick={handleSignInWithGoogle}>
+                    <div>
+                        <FcGoogle style={{ height: '25px', width: '25px' }} />
+                    </div>
+                    Sign in with google
+                </button>
                 <span className="no-account">Don't have an account?<Link to='/signup'> Sign Up</Link> </span>
             </div>
         </div>

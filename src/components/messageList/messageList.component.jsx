@@ -1,12 +1,9 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 
 import './messageList.styles.scss'
-import search from './../../assets/search.svg'
-import threedots from './../../assets/three-dots.svg'
-import call from './../../assets/call-add.svg'
-import smile from './../../assets/smile.svg'
-import send from './../../assets/send.svg'
+
 import { MdMoreVert } from 'react-icons/md'
+import { RiImageAddFill } from 'react-icons/ri'
 import { BsSearch, BsEmojiLaughing } from 'react-icons/bs'
 import { BiPhoneCall } from 'react-icons/bi'
 import { IoMdSend } from 'react-icons/io'
@@ -54,7 +51,7 @@ function MessageList({ chatRoom, currentUser, socket }) {
                 message: text
             }
             container.insertAdjacentHTML("beforeend", `<span class="message user-message">${msgData.message}</span>`);
-
+            container.scrollTop = container.scrollHeight
             console.log(msgData);
 
             socket.emit('send-mess', msgData)
@@ -94,7 +91,36 @@ function MessageList({ chatRoom, currentUser, socket }) {
 
     }
 
+    const addImage = () => {
 
+    }
+
+    const handleFile = async e => {
+        console.log(e)
+        let reader = new FileReader()
+        reader.onload = async (e) => {
+            const text = (e.target.result)
+            //console.log(text)
+            // const base64 = e.target.result.replace(/.*base64,/, '');
+            socket.emit('send-image', e.target.result);
+            //alert(text)
+        };
+        //e.target.files?.forEach(file =>    reader.readAsDataURL(file))
+        //console.log(e.target.files)
+        reader.readAsDataURL(e.target.files[0])
+        reader.onerror = function () {
+            console.log(reader.error);
+        };
+    }
+
+    socket.on('rec-image', img => {
+        const image = new Image()
+        image.src = `${img}`;
+        console.log('rec-image')
+        //console.log(image)
+        document.querySelector('.messages')?.insertAdjacentHTML("beforeend", `<img class="img-message user-message" src='${img}'/>`);
+
+    })
 
     return (
         <div className="message-list">
@@ -152,13 +178,21 @@ function MessageList({ chatRoom, currentUser, socket }) {
                             </div>
 
                         </div>
+                        <div className="add-image" style={{ padding: '1rem' }} onClick={addImage}>
+
+                            <input type="file" multiple className="add-image-input" onChange={handleFile} />
+                            <div className="add-image-icon">
+                                <RiImageAddFill />
+
+                            </div>
+                        </div>
                         {showEmoji ?
                             <div className="emoji-picker">
                                 <EmojiPicker autoFocusSearch={false} lazyLoadEmojis={true} previewConfig={{ showPreview: false }} onEmojiClick={addEmoji} />
                             </div> : <></>}
                         <input className="input-msg" type="text" placeholder="Type your message here..." ref={textRef} onKeyUp={handleInputText} />
                         <div className="send-btn" onClick={sendMessage}>
-                            <IoMdSend style={{color:'white',width:'3.5rem',height:'3.5rem'}}/>
+                            <IoMdSend style={{ color: 'white', width: '3.5rem', height: '3.5rem' }} />
                         </div>
                     </div></> : <div>no room created</div>}
         </div>)

@@ -100,7 +100,38 @@
     // margin: 1rem;
     align-items: center;
     position: relative;
+    
 
+    .add-image{
+        box-sizing: border-box;
+        width: 7%;
+        height: 100%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+
+        .add-image-input{
+            position: absolute;
+            opacity: 0;
+            z-index: 2;
+            height: 100%;
+        }
+
+        .add-image-icon{
+            transform: scale(1);
+            transition: all 0.3s;
+            z-index: 1;
+        }
+        &:hover{
+        background: rgb(213, 213, 213);
+
+        }
+        &:hover .add-image-icon{
+            transform: scale(1.2);
+        }
+    }
     .input-msg {
         box-sizing: border-box;
         flex-grow: 1;
@@ -112,6 +143,7 @@
         height: 100%;
         font-size: 1.6rem;
         background-color: rgb(245, 245, 245);
+        z-index: 5;
 
         &:active {
             border: none;
@@ -120,16 +152,29 @@
 
 
     .emoji-btn {
-
+        box-sizing: border-box;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100%;
         width: 5rem;
         cursor: pointer;
+        z-index: 5;
+        
+        div{
+            transform: scale(1);
+            transition: all 0.3s;
+
+        }
+
 
         &:hover {
             background-color: rgb(197, 197, 197);
+        }
+        
+        &:hover div{
+            transform: scale(1.2);
+
         }
 
 
@@ -157,4 +202,14 @@
             background-color: $color-secondary-light;
         }
     }
+}
+
+.img-message{
+    height: auto;
+    width: 40%;
+   
+    border-radius: 10px;
+    border: 5px solid white;
+    margin: 1rem;
+
 }

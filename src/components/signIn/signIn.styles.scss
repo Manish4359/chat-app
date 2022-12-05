@@ -87,15 +87,17 @@
 
     .sign-in-with-google {
         @include formSubmitBtnStyle;
-
         background: white;
         color: black;
         border: 1px solid rgb(203, 203, 203);
         display: flex;
         justify-content: center;
         align-items: center;
-
-        img{
+        
+        div{
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding-right: 1rem;
         }
 
