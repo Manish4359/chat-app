@@ -1,26 +1,31 @@
 @import './variables.scss';
 
 @mixin btnStyles() {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+
+    display: grid;
+    place-items: center;
     box-sizing: border-box;
-    background: $color-primary-dark;
-    border-radius: 30%;
-    color: white;
-    fill: white;
+    border-radius: 50%;
+
     height: 40px;
     width: 40px;
-    margin: 1rem;
-    padding: 1rem;
+
+    margin:0.5rem 1rem;
+    padding: 0.7rem;
     transition: all 0.3s;
-    box-shadow: 5px 5px 5px rgb(229, 229, 229);
+    box-shadow: 0 0 5px 2px rgb(235, 235, 235);
 
     &:hover {
         background: $color-primary-light;
-        transform: scale(1.02);
     }
+
+    &>img {
+        cursor: pointer;
+        //background: $color-primary-dark;
+        height: 25px;
+        width: 25px;
+    }
+
 }
 
 @mixin errorTextStyle {
@@ -58,6 +63,7 @@
     // box-shadow: 2px 2px 2px rgb(231, 231, 231);
     cursor: pointer;
     transition: all 0.5s;
+
     &:hover {
         box-shadow: 5px 5px 2px rgb(231, 231, 231);
         transform: translate(-5px, -5px);

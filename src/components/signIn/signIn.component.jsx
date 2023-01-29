@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { setCurrentUser } from './../../redux/user/user.actions'
 import { signinUser, signInWithGoogle } from "../../firebase/firebase";
 import LoadingIndicator from "../loadingIndicator/loadingIndicator";
-import { FcGoogle } from 'react-icons/fc'
+
 
 import './signIn.styles.scss'
 function SignIn({ setCurrentUser }) {
@@ -21,8 +21,22 @@ function SignIn({ setCurrentUser }) {
 
         setShowLoader(true)
 
-        const user = await signinUser({ email: emailRef.current.value, password: passwordRef.current.value })
+        const credentials = {
+            email: emailRef.current.value,
+            password: passwordRef.current.value
+        };
+        const user = await signinUser(credentials)
 
+        /*
+                const res = await fetch('http://127.0.0.1:8888/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+        
+                    body: JSON.stringify(credentials)
+                }).then(res => res.json());
+        */
         if (user) {
             setCurrentUser(user)
             setShowLoader(false)
@@ -75,7 +89,7 @@ function SignIn({ setCurrentUser }) {
                 </form>
                 <button className="sign-in-with-google" onClick={handleSignInWithGoogle}>
                     <div>
-                        <FcGoogle style={{ height: '25px', width: '25px' }} />
+                        {/*<FcGoogle style={{ height: '25px', width: '25px' }} />*/}
                     </div>
                     Sign in with google
                 </button>

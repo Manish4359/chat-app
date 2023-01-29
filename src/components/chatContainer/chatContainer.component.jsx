@@ -13,13 +13,13 @@ function ChatContainer({ currentUser }) {
 
 
 
-    let [socket,setSock]=useState(null);
+    let [socket,setSock]=useState({});
 
     const setSocketRef= async ()=>{
     
-        const s =await io("ws://localhost:8888/")
+       // const s =await io("ws://localhost:8888/")
 
-        setSock(s)
+       // setSock(s)
     }
     useEffect(() => {
         setSocketRef()
@@ -27,7 +27,7 @@ function ChatContainer({ currentUser }) {
 
     return (socket ? <div className="chat-container">
         <ChatList />
-        <MessageList socket={socket}/>
+        <MessageList />
     </div> : <span>connecting to server</span>)
 
 }

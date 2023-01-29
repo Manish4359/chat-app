@@ -2,20 +2,24 @@ import React, { useEffect, useState } from "react";
 import { signOutUser, addData } from "../../firebase/firebase";
 import './chatList.styles.scss'
 
-import { AiOutlineUserAdd } from 'react-icons/ai'
-import { MdMoreVert } from 'react-icons/md'
-import { BsSearch } from 'react-icons/bs'
 import ChatCard from "../chatCard/chatCard.components";
 import { connect } from "react-redux";
 import { setCurrentUser } from "../../redux/user/user.actions";
 import { createRoom, roomCreated } from './../../redux/chatRoom/chatRoom.actions'
+import AddContact from "../addContact/addContact.component";
+import searchIcon from './../../assets/icons/search.png';
+import moreIcon from './../../assets/icons/more.png';
+import addUserIcon from './../../assets/icons/add-user.png';
+import { getMessage } from "../../firebase/firebase";
 
 
-function ChatList({ currentUser, setCurrentUser, createRoom, roomCreated }) {
+
+function ChatList({ chatRoom, currentUser, setCurrentUser, createRoom, roomCreated }) {
 
 
 
     const [showUserMenu, toggleUserMenu] = useState(false)
+    const [showContactList, toggleShowContactList] = useState(false)
 
     const handleLogout = (e) => {
 
@@ -30,17 +34,27 @@ function ChatList({ currentUser, setCurrentUser, createRoom, roomCreated }) {
         toggleUserMenu(!showUserMenu)
     }
 
-    const fn = async () => {
-        console.log(currentUser.id)
-        await addData();
-    }
+    const selectContact = async contact => {
+        console.log(contact)
 
-    const contacts = currentUser.contacts;
-    console.log(contacts)
+        if (chatRoom.room?.receiverId === contact && chatRoom.room?.senderId === currentUser.id) {
+            console.log("Already in the room");
+            return
+        }
 
+        const members = {
+            members: [currentUser.id, contact]
+        }
+        /*
+                const response= await fetch('http://localhost:8888/chat/room',{
+                    method:'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body:JSON.stringify(members)
+                }).then(res=>res.json());
+        */
 
-    const selectContact = contact => {
-        // console.log(contact)
         const roomData = {
             roomId: Date.now(),
             senderId: currentUser.id,
@@ -48,9 +62,12 @@ function ChatList({ currentUser, setCurrentUser, createRoom, roomCreated }) {
         }
         roomCreated(true)
         createRoom(roomData)
+        await getMessage(currentUser.id,contact)
+
     }
 
     return (
+
         <div className="chat-list">
             <div className="user-header">
 
@@ -58,18 +75,17 @@ function ChatList({ currentUser, setCurrentUser, createRoom, roomCreated }) {
                 <h3 className="user-name">
                     {currentUser.name}
                 </h3>
-                <div className="add-btn">
-                    <AiOutlineUserAdd />
+                <div className="add-btn" onClick={() => toggleShowContactList(!showContactList)}>
+                     <img src={addUserIcon}/>
                 </div>
+
                 <div className="search-btn">
-                    <BsSearch />
+                <img src={searchIcon}/>
                 </div>
-    
+
                 <div className="user-setting-menu" >
                     <div className="menu-btn" onClick={handleToogleUserMenu}>
-                        <div className="more-btn user-setting">
-                            <MdMoreVert />
-                        </div>
+                        <img className="more-btn user-setting" src={moreIcon}/> 
                     </div>
                     {showUserMenu ? (<ul className="menu">
                         <li>starred messages</li>
@@ -78,9 +94,12 @@ function ChatList({ currentUser, setCurrentUser, createRoom, roomCreated }) {
                     </ul>) : <></>}
                 </div>
             </div>
-            <div className="chats" >
-                {contacts ? contacts.map((contact, id) => <ChatCard key={id} contactId={contact} selectContact={selectContact} />) : <></>}
-            </div>
+            {showContactList ?
+                <AddContact toggleShowContactList={toggleShowContactList} /> :
+                <div className="chats" >
+                    {console.log(currentUser.contacts)}
+                    {currentUser.contacts ? currentUser.contacts.map((contact, id) => <ChatCard key={id} contact={contact} selectContact={selectContact} />) : <div>no contacts</div>}
+                </div>}
         </div>
 
     )
@@ -88,7 +107,8 @@ function ChatList({ currentUser, setCurrentUser, createRoom, roomCreated }) {
 }
 
 const mapStateToProps = state => ({
-    currentUser: state.user.currentUser
+    currentUser: state.user.currentUser,
+    chatRoom: state.chatRoom
 })
 
 const mapDispatchToProps = dispatch => ({

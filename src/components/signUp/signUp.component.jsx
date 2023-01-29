@@ -14,6 +14,7 @@ function SignUp({ currentUser, setCurrentUser }) {
 
     const firstNameRef = useRef("")
     const lastNameRef = useRef("")
+    const usernameRef=useRef("")
     const emailRef = useRef("")
     const passwordRef = useRef("")
     const confirmPasswordRef = useRef("")
@@ -31,14 +32,33 @@ function SignUp({ currentUser, setCurrentUser }) {
             setShowLoader(false)
             return
         }
+        /*
+        const credentials = {
+            name: `${firstNameRef.current.value} ${lastNameRef.current.value}`,
+            username:usernameRef.current.value,
+            email: emailRef.current.value,
+            password: passwordRef.current.value,
+        };
+        */
 
         const user = await signupUser({
             name: `${firstNameRef.current.value} ${lastNameRef.current.value}`,
+            username:usernameRef.current.value,
             email: emailRef.current.value,
             password: passwordRef.current.value,
-            photoURL: `https://xsgames.co/randomusers/avatar.php?g=male`
+            photoURL: `https://api.dicebear.com/5.x/adventurer/svg`
         })
-        console.log(user)
+
+/*
+        const res = await fetch('http://127.0.0.1:8888/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+
+            body: JSON.stringify(credentials)
+        }).then(res => res.json());  
+        */
         if (user) {
             setCurrentUser(user);
             setShowLoader(false)
@@ -67,6 +87,8 @@ function SignUp({ currentUser, setCurrentUser }) {
                             <input type="text" id="lname" name="lastname" placeholder="Last name" ref={lastNameRef} />
                         </div>
                     </div>
+                    <label htmlFor="signup-username">Username</label><br />
+                    <input type="username" id="signup-username" name="username" placeholder="Enter your username" ref={usernameRef} /><br />
                     <label htmlFor="signup-email">Email</label><br />
                     <input type="email" id="signup-email" name="email" placeholder="Enter your email" ref={emailRef} /><br />
                     <label htmlFor="signup-pass">Password</label><br />

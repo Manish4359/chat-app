@@ -1,8 +1,9 @@
-import { initializeApp } from "firebase/app";
-
+import { ref, set, getDatabase, get, child, update, onValue } from "firebase/database";
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/firestore';
 
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { doc, getFirestore,getDoc, setDoc } from "firebase/firestore";
+//import { doc, getFirestore,getDoc, setDoc } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBtd2FISa19lYXLikuxn8rI1sAv83R77zs",
@@ -10,19 +11,25 @@ const firebaseConfig = {
     projectId: "chat-app-4e9aa",
     storageBucket: "chat-app-4e9aa.appspot.com",
     messagingSenderId: "426512762820",
-    appId: "1:426512762820:web:3b74f5985229eed8b7c691"
+    appId: "1:426512762820:web:3b74f5985229eed8b7c691",
+    databaseURL: "https://chat-app-4e9aa-default-rtdb.firebaseio.com",
 };
 
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+//const app = initializeApp(firebaseConfig);
+//const db = getFirestore(app);
 
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Initialize Realtime Database and get a reference to the service
+//const db = firebase.database();
 
 const auth = getAuth()
 
 const provider = new GoogleAuthProvider();
 
-export const signupUser = async ({ name, email, password, photoURL }) => {
+export const signupUser = async ({ name, username, email, password, photoURL }) => {
 
     const user = await createUserWithEmailAndPassword(auth, email, password)
         .then(userCredentials =>
@@ -32,20 +39,88 @@ export const signupUser = async ({ name, email, password, photoURL }) => {
 
     if (!user) return
 
+
     await updateProfile(user, {
         displayName: name,
         photoURL: photoURL
     })
 
+    await addUserData(user.uid, username, name, email, photoURL)
+
     return {
         id: user.uid,
-        name: user.displayName,
+        username: username,
+        name: user.name,
         photoURL: user.photoURL,
-        email: user.email
+        email: user.email,
+        contacts: user.contacts
     }
 }
 
+export const getAllUsers = async (getUsers) => {
+
+    let data;
+    const dbRef = ref(getDatabase());
+    await get(child(dbRef, `users`)).then((snapshot) => {
+        if (snapshot.exists()) {
+            data = snapshot.val();
+        } else {
+            console.log("No data available");
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+
+
+    getUsers(data)
+}
+
+const addUserData = async (userId, username, name, email, imageUrl) => {
+    const db = getDatabase()
+
+    await set(ref(db, `users/${userId}`), {
+        id: userId,
+        name: name,
+        username: username,
+        email: email,
+        photo: imageUrl,
+        contacts: null
+    })
+}
+
+export const addMessage = async ({ id, message, receiverId, senderId }) => {
+
+    const db = getDatabase();
+
+    await set(ref(db, `messages/${id}`), {
+        id,
+        senderId,
+        receiverId,
+        message
+    })
+
+    await set(ref(db, `users/${senderId}/messages/${receiverId}/${id}`), true)
+}
+export const getMessage = async (senderId, receiverId ) => {
+    const db = getDatabase();
+
+    const messageRef = ref(db, `users/${senderId}/messages/${receiverId}`);
+    onValue(messageRef, (snapshot) => {
+        const data = snapshot.val();
+        console.log(data);
+    });
+}
+
+export const addContacts = async (currentUserId, contactId) => {
+    const db = getDatabase();
+
+    const updates = {}
+    updates[`users/${currentUserId}/contacts/${contactId}`] = true
+    await update(ref(db), updates)
+}
+
 export const signinUser = async ({ email, password }) => {
+
 
     const user = await signInWithEmailAndPassword(auth, email, password)
         .then(userCredentials =>
@@ -57,19 +132,40 @@ export const signinUser = async ({ email, password }) => {
     if (!user) return
 
 
-    const contacts=await getData(user.uid);
+    const userData = await getUser(user.uid);
 
-    return {
-        id: user.uid,
-        name: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        contacts
-    }
+    return userData
 }
 
+const getUser = async userId => {
+    const dbRef = ref(getDatabase());
 
+    let data;
+    await get(child(dbRef, `users/${userId}`)).then(snapshot => {
+        if (snapshot.exists()) {
+            data = snapshot.val();
 
+        }
+    }).catch(err => console.log(err))
+
+    if (data.contacts)
+        data.contacts = await getContacts(Object.keys(data.contacts))
+
+    return data;
+}
+const getContacts = async ids => {
+    let data = ids?.map(async id => {
+        const dbRef = ref(getDatabase());
+
+        const snapshot = await get(child(dbRef, `users/${id}`))
+        if (snapshot.exists()) return snapshot.val();
+
+    })
+    console.log(data);
+
+    data = await Promise.all(data).then(val => val)
+    return data
+}
 
 
 export const signInWithGoogle = async () => {
@@ -82,7 +178,7 @@ export const signInWithGoogle = async () => {
 
     if (!user) return
 
-    const contacts=await getData(user.uid);
+    const contacts = await getData(user.uid);
 
 
     return {
@@ -90,19 +186,19 @@ export const signInWithGoogle = async () => {
         name: user.displayName,
         email: user.email,
         photoURL: user?.photoURL,
-        contacts:contacts
+        contacts: contacts
     }
 }
 
 export const signOutUser = () => {
 
     if (auth.currentUser) {
-        auth.signOut(); 
+        auth.signOut();
     }
 }
 
 export const getData = async (uid) => {
-    
+    /*
     console.log(uid)
     try{
         
@@ -115,6 +211,7 @@ export const getData = async (uid) => {
     }catch(e){
         console.log(e)
     }
+    */
 }
 
 
@@ -122,7 +219,7 @@ export const addData = async () => {
 
     // Initialize Cloud Firestore and get a reference to the service
 
-    console.log(db)
+    // console.log(db)
 
 
     try {

@@ -1,0 +1,59 @@
+@import './../../variables.scss';
+
+.contact-list{
+   // height: 100%;
+    width: 100%;
+    //background: yellow;
+    overflow-y: scroll;
+    
+    .contact{
+
+     
+        margin: 1rem;
+        padding: 0.7rem;
+        border: 1px solid transparent;
+        border-radius: 30px;
+        background: white;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        box-shadow: 0 0 10px 2px $box-shadow;
+        transition: all 0.3s ease-out;
+
+        &:hover{
+        border: 1px solid black;
+
+        box-shadow: 0 0 15px 4px $box-shadow;
+        }
+
+        img{
+            
+        }
+
+        .contact-name{
+            flex-grow: 1;
+            margin-left: .5rem;
+
+
+            p{
+                text-transform: capitalize;
+                font-size: 18px;
+            }
+            span{
+                color: gray;
+            }
+
+        }
+        button{
+            cursor: pointer;
+            border: none;
+            height: 3rem;
+            width: 3rem;
+            padding: 0.5rem;
+            margin:auto 1rem ;
+
+        
+        }
+    }
+
+}

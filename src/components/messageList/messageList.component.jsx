@@ -2,19 +2,24 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 
 import './messageList.styles.scss'
 
-import { MdMoreVert } from 'react-icons/md'
-import { RiImageAddFill } from 'react-icons/ri'
-import { BsSearch, BsEmojiLaughing } from 'react-icons/bs'
-import { BiPhoneCall } from 'react-icons/bi'
-import { IoMdSend } from 'react-icons/io'
+
 import { connect } from "react-redux";
 import EmojiPicker from "emoji-picker-react";
+import sendIcon from './../../assets/icons/send.png';
+import happyIcon from './../../assets/icons/happy.jpg';
+import searchIcon from './../../assets/icons/search.png';
+import moreIcon from './../../assets/icons/more.png';
+import { addMessage } from "../../firebase/firebase";
+
+
 
 function MessageList({ chatRoom, currentUser, socket }) {
 
 
+
     let textRef = useRef("")
     let [showEmoji, setShowEmoji] = useState(false)
+
 
     const handleInputText = (e) => {
         // console.log(e)
@@ -29,12 +34,12 @@ function MessageList({ chatRoom, currentUser, socket }) {
     const { room } = chatRoom
 
     // console.log(isRoomCreated,room)
-
-    socket.on('connect', () => {
-        console.log('connected', socket.id)
-    })
-
-    const sendMessage = (e) => {
+    /*
+        socket.on('connect', () => {
+            console.log('connected', socket.id)
+        })
+    */
+    const sendMessage = async(e) => {
 
         const container = document.querySelector('.messages')
         const text = textRef.current.value;
@@ -50,27 +55,29 @@ function MessageList({ chatRoom, currentUser, socket }) {
                 receiverId: room.receiverId,
                 message: text
             }
+            
+            console.log(msgData);
             container.insertAdjacentHTML("beforeend", `<span class="message user-message">${msgData.message}</span>`);
             container.scrollTop = container.scrollHeight
-            console.log(msgData);
-
-            socket.emit('send-mess', msgData)
-
-            socket.onAny((event, ...args) => {
-                console.log(event, args);
-            });
-
-            socket.off('receive-mess').on(`receive-mess`, ({ id, senderId, receiverId, message }) => {
-
-
-                console.log(msgData)
-                if (receiverId !== currentUser.id || senderId !== room.receiverId) return
-
-                container.insertAdjacentHTML("beforeend", `<span class="message ${senderId === currentUser.id ? 'user-message' : 'contact-message'}">${message}</span>`);
-                container.scrollTop = container.scrollHeight
-
-            })
-
+            await addMessage(msgData)
+            /*
+                        socket.emit('send-mess', msgData)
+            
+                        socket.onAny((event, ...args) => {
+                            console.log(event, args);
+                        });
+            
+                        socket.off('receive-mess').on(`receive-mess`, ({ id, senderId, receiverId, message }) => {
+            
+            
+                            console.log(msgData)
+                            if (receiverId !== currentUser.id || senderId !== room.receiverId) return
+            
+                            container.insertAdjacentHTML("beforeend", `<span class="message ${senderId === currentUser.id ? 'user-message' : 'contact-message'}">${message}</span>`);
+                            container.scrollTop = container.scrollHeight
+            
+                        })
+            */
             /*
             const socket = io("ws://localhost:8888/")
             socket.on('connect', () => {
@@ -102,7 +109,7 @@ function MessageList({ chatRoom, currentUser, socket }) {
             const text = (e.target.result)
             //console.log(text)
             // const base64 = e.target.result.replace(/.*base64,/, '');
-            socket.emit('send-image', e.target.result);
+            //    socket.emit('send-image', e.target.result);
             //alert(text)
         };
         //e.target.files?.forEach(file =>    reader.readAsDataURL(file))
@@ -112,16 +119,24 @@ function MessageList({ chatRoom, currentUser, socket }) {
             console.log(reader.error);
         };
     }
+    /*
+        socket.on('rec-image', img => {
+            const image = new Image()
+            image.src = `${img}`;
+            console.log('rec-image')
+            //console.log(image)
+            document.querySelector('.messages')?.insertAdjacentHTML("beforeend", `<img class="img-message user-message" src='${img}'/>`);
+    
+        })
+        */
 
-    socket.on('rec-image', img => {
-        const image = new Image()
-        image.src = `${img}`;
-        console.log('rec-image')
-        //console.log(image)
-        document.querySelector('.messages')?.insertAdjacentHTML("beforeend", `<img class="img-message user-message" src='${img}'/>`);
-
-    })
-
+    /*
+    const fn=()=> {
+        const contact = chatRoom.room.members.find((member) => member._id !== currentUser.id)
+        console.log(contact)
+        return contact.name
+    }}
+*/
     return (
         <div className="message-list">
             {
@@ -131,25 +146,35 @@ function MessageList({ chatRoom, currentUser, socket }) {
                         <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="" className="contact-user-img" />
                         <div className="contact-user-data">
                             <h3 className="contact-name">
-                                Tej punj
+
                             </h3>
                             <span className="contact-last-seen">
-                                29 feb ,2020
+                                29 feb ,2022
                             </span>
 
                         </div>
+                        <div className="search-btn">
+
+                            <img src={searchIcon} alt="search" />
+                        </div>
+                        <div className="search-btn">
+
+                            <img src={moreIcon} alt="more" />
+                        </div>
+                        {/*
                         <div className="search-btn"><BsSearch /></div>
                         <div className="call-btn"> <BiPhoneCall /></div>
                         <div className="more-btn"> <MdMoreVert /></div>
-                        {/* <img alt="search" src={search} className="search-btn" />
-                <img alt='call' src={call} className="more-btn" />
-                    <img alt="more" src={threedots} className="call-btn " />
-                */}
+                         <img alt="search" src={search} className="search-btn" />
+                        <img alt='call' src={call} className="more-btn" />
+                            <img alt="more" src={threedots} className="call-btn " />
+                        */}
 
                     </div>
                     <div className="messages " >
 
                         {/*
+                    */}
                         <span className="chat-day">Yesterday</span>
                         <span className="message user-message">mesNote that the development build is
                             not optimized.
@@ -164,35 +189,38 @@ function MessageList({ chatRoom, currentUser, socket }) {
                             To create a production build, use npm run build.ages2 </span>
                         <span className="message contact-message">messNote that the development build is not optimized.
                             To create a production build, use npm run build.ages2 </span>
-*/}
                     </div>
                     <div className="message-send">
-                        <div className="emoji-btn"
-                            onClick={(e) => {
-                                setShowEmoji(!showEmoji);
-                                e.stopPropagation()
-                            }}>
+                        <div className="message-send-content">
 
-                            <div>
-                                <BsEmojiLaughing />
+                            <div className="emoji-btn"
+                                onClick={(e) => {
+                                    setShowEmoji(!showEmoji);
+                                    e.stopPropagation()
+                                }}>
+
+                                <img src={happyIcon} alt="happy" />
+
                             </div>
-
-                        </div>
+                            {/*
                         <div className="add-image" style={{ padding: '1rem' }} onClick={addImage}>
-
-                            <input type="file" multiple className="add-image-input" onChange={handleFile} />
-                            <div className="add-image-icon">
-                                <RiImageAddFill />
+                        
+                        <input type="file" multiple className="add-image-input" onChange={handleFile} />
+                        <div className="add-image-icon">
+                        <RiImageAddFill />
 
                             </div>
                         </div>
-                        {showEmoji ?
-                            <div className="emoji-picker">
-                                <EmojiPicker autoFocusSearch={false} lazyLoadEmojis={true} previewConfig={{ showPreview: false }} onEmojiClick={addEmoji} />
-                            </div> : <></>}
-                        <input className="input-msg" type="text" placeholder="Type your message here..." ref={textRef} onKeyUp={handleInputText} />
+                        */}
+                            {showEmoji ?
+                                <div className="emoji-picker">
+                                    <EmojiPicker autoFocusSearch={false} lazyLoadEmojis={true} previewConfig={{ showPreview: false }} onEmojiClick={addEmoji} />
+                                </div> : <></>}
+                            <input className="input-msg" type="text" placeholder="Type your message here..." ref={textRef} onKeyUp={handleInputText} />
+                        </div>
                         <div className="send-btn" onClick={sendMessage}>
-                            <IoMdSend style={{ color: 'white', width: '3.5rem', height: '3.5rem' }} />
+                            <img src={sendIcon} alt="send" />
+                            {/* <IoMdSend style={{ color: 'white', width: '3.5rem', height: '3.5rem' }}/> */}
                         </div>
                     </div></> : <div>no room created</div>}
         </div>)
