@@ -55,15 +55,17 @@ function ChatList({ chatRoom, currentUser, setCurrentUser, createRoom, roomCreat
                 }).then(res=>res.json());
         */
 
+       // let message = await getMessage(currentUser.id, contact)
+
+        
         const roomData = {
             roomId: Date.now(),
             senderId: currentUser.id,
-            receiverId: contact
+            receiverId: contact,
+            messages:[]
         }
         roomCreated(true)
         createRoom(roomData)
-        await getMessage(currentUser.id,contact)
-
     }
 
     return (
@@ -76,16 +78,16 @@ function ChatList({ chatRoom, currentUser, setCurrentUser, createRoom, roomCreat
                     {currentUser.name}
                 </h3>
                 <div className="add-btn" onClick={() => toggleShowContactList(!showContactList)}>
-                     <img src={addUserIcon}/>
+                    <img src={addUserIcon} />
                 </div>
 
                 <div className="search-btn">
-                <img src={searchIcon}/>
+                    <img src={searchIcon} />
                 </div>
 
                 <div className="user-setting-menu" >
                     <div className="menu-btn" onClick={handleToogleUserMenu}>
-                        <img className="more-btn user-setting" src={moreIcon}/> 
+                        <img className="more-btn user-setting" src={moreIcon} />
                     </div>
                     {showUserMenu ? (<ul className="menu">
                         <li>starred messages</li>
@@ -97,7 +99,6 @@ function ChatList({ chatRoom, currentUser, setCurrentUser, createRoom, roomCreat
             {showContactList ?
                 <AddContact toggleShowContactList={toggleShowContactList} /> :
                 <div className="chats" >
-                    {console.log(currentUser.contacts)}
                     {currentUser.contacts ? currentUser.contacts.map((contact, id) => <ChatCard key={id} contact={contact} selectContact={selectContact} />) : <div>no contacts</div>}
                 </div>}
         </div>

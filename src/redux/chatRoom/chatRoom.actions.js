@@ -13,3 +13,10 @@ export const roomCreated=(currRoom)=>{
         payload:currRoom
     }
 }
+
+export const updateMessage=(msg)=>{
+    return {
+        type:actionTypes.UPDATE_MESSAGE,
+        payload:msg
+    }
+}

@@ -4,7 +4,7 @@ import './chatCard.styles.scss'
 
 function ChatCard({ room, contact, selectContact }) {
 
-    console.log(contact);
+    //console.log(contact);
 
     const handleHover = (e, color) => {
         if (room?.receiverId === contact.id) return

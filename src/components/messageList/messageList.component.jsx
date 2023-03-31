@@ -9,16 +9,20 @@ import sendIcon from './../../assets/icons/send.png';
 import happyIcon from './../../assets/icons/happy.jpg';
 import searchIcon from './../../assets/icons/search.png';
 import moreIcon from './../../assets/icons/more.png';
-import { addMessage } from "../../firebase/firebase";
+import { addMessage, getMessage } from "../../firebase/firebase";
+import { updateMessage } from "../../redux/chatRoom/chatRoom.actions";
 
 
 
-function MessageList({ chatRoom, currentUser, socket }) {
+
+function MessageList({ chatRoom, currentUser, socket,updateMessage }) {
 
 
 
     let textRef = useRef("")
     let [showEmoji, setShowEmoji] = useState(false)
+    const [message,setMessage]=useState(null)
+
 
 
     const handleInputText = (e) => {
@@ -33,13 +37,30 @@ function MessageList({ chatRoom, currentUser, socket }) {
     const { isRoomCreated } = chatRoom
     const { room } = chatRoom
 
+    useEffect(() => {
+        if (room) {
+            let allMsg
+            let userMsg
+            const fetchMessage = async () => {
+                //allMsg = await getAllMessage()
+                userMsg = await getMessage(room.senderId,room.receiverId)
+                console.log(userMsg)
+                updateMessage(userMsg)
+            }
+
+            fetchMessage()
+        }
+    }, [isRoomCreated])
+
+    //if(message)updateMessage(message)
+
     // console.log(isRoomCreated,room)
     /*
         socket.on('connect', () => {
             console.log('connected', socket.id)
         })
     */
-    const sendMessage = async(e) => {
+    const sendMessage = async (e) => {
 
         const container = document.querySelector('.messages')
         const text = textRef.current.value;
@@ -55,11 +76,21 @@ function MessageList({ chatRoom, currentUser, socket }) {
                 receiverId: room.receiverId,
                 message: text
             }
-            
+
             console.log(msgData);
-            container.insertAdjacentHTML("beforeend", `<span class="message user-message">${msgData.message}</span>`);
-            container.scrollTop = container.scrollHeight
+            //  container.insertAdjacentHTML("beforeend", `<span class="message user-message">${msgData.message}</span>`);
+
             await addMessage(msgData)
+
+
+            /*
+                       container.innerHTML="";
+                       messages.forEach(msg=>{
+                           //console.log(msg)
+                           container.insertAdjacentHTML("beforeend", `<span class="message ${msg.senderId === currentUser.id ? 'user-message' : 'contact-message'}">${msg.message}</span>`);
+                       })
+                       */
+            container.scrollTop = container.scrollHeight
             /*
                         socket.emit('send-mess', msgData)
             
@@ -95,7 +126,6 @@ function MessageList({ chatRoom, currentUser, socket }) {
             */
         }
         textRef.current.value = ""
-
     }
 
     const addImage = () => {
@@ -151,7 +181,7 @@ function MessageList({ chatRoom, currentUser, socket }) {
                             <span className="contact-last-seen">
                                 29 feb ,2022
                             </span>
-
+ 
                         </div>
                         <div className="search-btn">
 
@@ -174,7 +204,6 @@ function MessageList({ chatRoom, currentUser, socket }) {
                     <div className="messages " >
 
                         {/*
-                    */}
                         <span className="chat-day">Yesterday</span>
                         <span className="message user-message">mesNote that the development build is
                             not optimized.
@@ -189,6 +218,8 @@ function MessageList({ chatRoom, currentUser, socket }) {
                             To create a production build, use npm run build.ages2 </span>
                         <span className="message contact-message">messNote that the development build is not optimized.
                             To create a production build, use npm run build.ages2 </span>
+                    */}
+                        {chatRoom.room?.messages ? chatRoom.room.messages.map(msg => <span className={msg.senderId === currentUser.id ? 'message user-message' : 'message contact-message'}>{msg.message}</span>) : <div></div>}
                     </div>
                     <div className="message-send">
                         <div className="message-send-content">
@@ -222,7 +253,7 @@ function MessageList({ chatRoom, currentUser, socket }) {
                             <img src={sendIcon} alt="send" />
                             {/* <IoMdSend style={{ color: 'white', width: '3.5rem', height: '3.5rem' }}/> */}
                         </div>
-                    </div></> : <div>no room created</div>}
+                    </div></> : <div>no room created/message fetched</div>}
         </div>)
 }
 
@@ -232,7 +263,12 @@ const mapStateToProps = state => {
         currentUser: state.user.currentUser
     }
 }
+ 
+const mapDispatchToProps = dispatch => ({
+    updateMessage: (state) => dispatch(updateMessage(state))
+})
 
 
-export default connect(mapStateToProps)(MessageList)
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageList)
 

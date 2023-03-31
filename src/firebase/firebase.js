@@ -100,17 +100,63 @@ export const addMessage = async ({ id, message, receiverId, senderId }) => {
     })
 
     await set(ref(db, `users/${senderId}/messages/${receiverId}/${id}`), true)
+    await set(ref(db, `users/${receiverId}/messages/${senderId}/${id}`), true)
+
 }
-export const getMessage = async (senderId, receiverId ) => {
+
+
+export const getMessage = async (senderId, receiverId) => {
+
+    console.log(senderId, receiverId)
+
     const db = getDatabase();
 
-    const messageRef = ref(db, `users/${senderId}/messages/${receiverId}`);
-    onValue(messageRef, (snapshot) => {
-        const data = snapshot.val();
-        console.log(data);
-    });
+    const senderRef = ref(db, `users/${senderId}/messages/${receiverId}`);
+    let messagesIds = [];
+    const  snapshot1 = await get(senderRef)
+
+    messagesIds.push(...Object.keys(snapshot1.val()))
+
+    const receiverRef = ref(db, `users/${receiverId}/messages/${senderId}`);
+    const snapshot2 = await get(receiverRef)
+    messagesIds.push(...Object.keys(snapshot2.val()))
+
+    let msgData;
+    const messageRef = ref(db, `/messages`)
+    const snapshot = await get(messageRef)
+    msgData = snapshot.val()
+
+
+
+    let result = [];
+    for (let key in msgData) {
+        if (messagesIds?.includes(key)) {
+            //console.log(msgData[key])
+            result.push(msgData[key])
+        }
+    }
+
+    return result
 }
 
+export const getAllMessage = async () => {
+    const db = getDatabase();
+    let msgData;
+    const messageRef = ref(db, `/messages`)
+    const snapshot = await get(messageRef)
+    msgData = snapshot.val()
+    return msgData
+
+}
+export const getUserMessage = async (senderId, receiverId) => {
+    const db = getDatabase();
+    const messageRef = ref(db, `users/${senderId}/messages/${receiverId}`);
+    let messagesIds;
+    const snapshot = await get(messageRef)
+
+    messagesIds = Object.keys(snapshot.val())
+    return messagesIds
+}
 export const addContacts = async (currentUserId, contactId) => {
     const db = getDatabase();
 
